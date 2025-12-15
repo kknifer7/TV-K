@@ -1,10 +1,10 @@
 # 影视-K版
 
-与 [FreeBox](https://github.com/kknifer7/FreeBox) 搭配使用的安卓端TVBox，详情请去 [FreeBox](https://github.com/kknifer7/FreeBox) 项目中查看。
+与 [FreeBox](https://github.com/kknifer7/FreeBox) 搭配使用的安卓端FongMi影视，详情请去 [FreeBox](https://github.com/kknifer7/FreeBox) 项目中查看。
 
 基于项目：
 
-- [FongMi/TV](https://github.com/FongMi/TV)
+- [FongMi/TV](https://github.com/FongMi/TV)（手机端）
 
 **本软件完全、永远免费、开源，如果您下载或使用了本软件，视为您已阅读并同意本软件的[免责声明](https://github.com/kknifer7/TV-K/raw/refs/heads/main/doc/%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E.txt)**
 
