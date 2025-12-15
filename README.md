@@ -1,263 +1,40 @@
-# 影視
+# 影视-K版
 
-### 基於 CatVod 項目
+与 [FreeBox](https://github.com/kknifer7/FreeBox) 搭配使用的安卓端TVBox，详情请去 [FreeBox](https://github.com/kknifer7/FreeBox) 项目中查看。
 
-https://github.com/CatVodTVOfficial/CatVodTVJarLoader
+基于项目：
 
-### 點播欄位
+- [FongMi/TV](https://github.com/FongMi/TV)
 
-| 欄位名稱       | 預設值  | 說明   | 其他         |
-|------------|------|------|------------|
-| searchable | 1    | 是否搜索 | 0：關閉；1：啟用  |
-| changeable | 1    | 是否換源 | 0：關閉；1：啟用  |
-| quickserch | 1    | 是否快搜 | 0：關閉；1：啟用  |
-| indexs     | 0    | 是否聚搜 | 0：關閉；1：啟用  |
-| hide       | 0    | 是否隱藏 | 0：顯示；1：隱藏  |
-| timeout    | 15   | 播放超時 | 單位：秒       |
-| header     | none | 請求標頭 | 格式：json    |
-| click      | none | 點擊js | javascript |
+**本软件完全、永远免费、开源，如果您下载或使用了本软件，视为您已阅读并同意本软件的[免责声明](https://github.com/kknifer7/TV-K/raw/refs/heads/main/doc/%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E.txt)**
 
-### 直播欄位
+## 免责声明
 
-| 欄位名稱     | 預設值   | 說明    | 其他         |
-|----------|-------|-------|------------|
-| ua       | none  | 用戶代理  |            |
-| origin   | none  | 來源    |            |
-| referer  | none  | 參照地址  |            |
-| epg      | none  | 節目地址  |            |
-| logo     | none  | 台標地址  |            |
-| pass     | false | 是否免密碼 |            |
-| boot     | false | 是否自啟動 |            |
-| timeout  | 15    | 播放超時  | 單位：秒       |
-| header   | none  | 請求標頭  | 格式：json    |
-| click    | none  | 點擊js  | javascript |
-| catchup  | none  | 回看參數  |            |
-| timeZone | none  | 時區    |            |
+影视-K软件（以下简称为“本软件”）免责声明：  
 
-### 樣式
+本免责声明是对于 [AGPL-3.0 license](https://www.gnu.org/licenses/agpl-3.0.html) 的补充，如有冲突，以以下免责声明为准。  
 
-| 欄位名稱  | 值    | 說明  |
-|-------|------|-----|
-| type  | rect | 矩形  |
-|       | oval | 橢圓  |
-|       | list | 列表  |
-| ratio | 0.75 | 3：4 |
-|       | 1.33 | 4：3 |
+词语约定：  
+本声明中的“本软件”指“影视-K”软件，“用户”指阅读本声明的“TVBox-K”软件使用者，“版权数据”指包括但不限于视频、图像、音频、名字等在内的他人拥有所属版权的数据。  
 
-直式
+1. 本软件仅为技术性多媒体播放器外壳（“空壳播放器”），核心功能限于基础媒体文件解析与播放。  
+2. 本软件自身不包含、不预装、不内置、不集成、不主动推荐、不直接或间接提供任何音视频、直播、图文等媒体资源内容。软件播放的任何资源均非由本软件或其开发者提供。  
+3. 本软件的使用者（以下简称为“用户”）通过本软件播放的任何内容均完全来源于用户自行配置、输入、添加、获取或选择的第三方来源（如网络地址、本地文件、用户安装的插件/扩展/配置源等）。本软件仅作为访问用户自行指定内容的技术工具。  
+4. 本软件无法控制、筛选、审查或保证用户访问的任何第三方内容的合法性、版权状态、准确性、安全性或适宜性。用户对其播放的内容负全部责任。  
+5. 关于用户责任与风险承担：  
+   5.1 用户必须确保其通过本软件配置、访问或播放的所有内容均已获相关权利人合法授权，或属于法律允许的自由使用范畴。  
+   5.2 用户理解并同意，使用本软件访问第三方资源可能涉及侵犯版权、传播非法信息、隐私泄露、网络安全等风险。因用户使用本软件访问、播放或传播内容产生的一切法律责任、纠纷、损失及后果（包括法律诉讼、行政处罚、民事赔偿等），均由用户自行承担，与本软件及其开发者无涉。  
+   5.3 开发者不认可、不支持任何利用本软件规避技术保护措施（如DRM）的行为，此类行为导致的侵权责任由用户全权承担。  
+6. 用户承诺并保证不利用本软件从事任何侵犯他人知识产权或其他合法权益的活动，或进行任何违反法律法规的行为。严禁使用本软件播放、传播盗版、色情、暴力、赌博、诈骗、危害国家安全、危害社会稳定等非法或侵权内容。  
+7. 在任何情况下，本软件开发者均不就因用户使用或无法使用本软件、用户配置或访问的第三方资源、用户违反本声明或法律法规的行为导致的任何直接、间接、偶然、特殊、惩罚性或结果性损害（包括利润损失、数据丢失、业务中断、声誉损害等）承担任何责任（无论基于合同、侵权、严格责任或其他法律理论）。  
+8. 本软件运行可能依赖第三方库、服务或技术。开发者不对这些第三方组件的可用性、准确性、功能或合法性负责。  
+9. 用户理解并同意，使用本软件（包括下载、安装、运行）存在固有技术风险（如软件缺陷、兼容性问题、系统不稳定等），用户应自行承担此风险。  
+10. 本软件不主动申请无关权限，但播放功能需要访问本地存储或网络权限，用户需自行管控权限风险。  
+11. 通过本软件访问的第三方资源可能消耗移动数据流量，相关资费责任由用户承担。  
+12. 本软件仅用于对技术可行性的探索及研究，不接受任何商业（包括但不限于广告等）合作及捐赠。  
+13. 本软件内使用的部分包括但不限于字体、图片等资源来源于互联网。如果出现侵权可联系开发者移除。  
+14. 使用本软件的过程中可能会产生版权数据。对于这些版权数据，本软件不拥有它们的所有权。为了避免侵权，用户务必在 24 小时内 清除使用本项目的过程中所产生的版权数据。  
+15. 本软件发布于 [GitHub](https://github.com/kknifer7/TV-K) ，面向全世界人群用作对技术的学习交流，本软件永久免费、开源，本软件不对软件内的技术可能存在违反当地法律法规的行为作保证。  
+16. 本免责声明受中华人民共和国法律管辖并据其解释。若用户所在地法律强制规定特定责任条款，应以当地法律要求为准，但其他条款仍保持有效。任何由本声明或使用本软件引起的争议，应首先通过友好协商解决。  
 
-```json
-{
-  "style": {
-    "type": "rect"
-  }
-}
-```
-
-橫式
-
-```json
-{
-  "style": {
-    "type": "rect",
-    "ratio": 1.33
-  }
-}
-```
-
-正方
-
-```json
-{
-  "style": {
-    "type": "rect",
-    "ratio": 1
-  }
-}
-```
-
-正圓
-
-```json
-{
-  "style": {
-    "type": "oval"
-  }
-}
-```
-
-橢圓
-
-```json
-{
-  "style": {
-    "type": "oval",
-    "ratio": 1.1
-  }
-}
-```
-
-### API
-
-刷新詳情
-
-```
-http://127.0.0.1:9978/action?do=refresh&type=detail
-```
-
-刷新播放
-
-```
-http://127.0.0.1:9978/action?do=refresh&type=player
-```
-
-刷新直播
-
-```
-http://127.0.0.1:9978/action?do=refresh&type=live
-```
-
-推送字幕
-
-```
-http://127.0.0.1:9978/action?do=refresh&type=subtitle&path=http://xxx
-```
-
-推送彈幕
-
-```
-http://127.0.0.1:9978/action?do=refresh&type=danmaku&path=http://xxx
-```
-
-新增緩存字串
-
-```
-http://127.0.0.1:9978/cache?do=set&key=xxx&value=xxx
-```
-
-取得緩存字串
-
-```
-http://127.0.0.1:9978/cache?do=get&key=xxx
-```
-
-刪除緩存字串
-
-```
-http://127.0.0.1:9978/cache?do=del&key=xxx
-```
-
-### Proxy
-
-支持 http, https, socks4, socks5
-
-```
-scheme://username:password@host:port
-```
-
-配置新增 proxy 可指定代理
-靠前的 host 匹配到則使用該代理
-
-```json
-{
-  "spider": "",
-  "proxy": [
-    {
-      "name": "自訂",
-      "hosts": [
-        "googlevideo.com",
-        "raw.githubusercontent.com"
-      ],
-      "urls": [
-        "http://127.0.0.1:7890"
-      ]
-    },
-    {
-      "name": "全局",
-      "hosts": [
-        ".*."
-      ],
-      "urls": [
-        "socks5://127.0.0.1:7891"
-      ]
-    }
-  ]
-}
-```
-
-### Hosts
-
-```json
-{
-  "spider": "",
-  "hosts": [
-    "cache.ott.*.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com"
-  ]
-}
-```
-
-### Headers
-
-```json
-{
-  "spider": "",
-  "headers": [
-    {
-      "host": "gslbserv.itv.cmvideo.cn",
-      "header": {
-        "User-Agent": "okhttp/3.12.13",
-        "Referer": "test"
-      }
-    }
-  ]
-}
-```
-
-### 爬蟲本地代理
-
-Java
-
-```
-proxy://
-```
-
-```
-Proxy.getUrl(boolean local)
-```
-
-Python
-
-```
-proxy://do=py
-```
-
-```
-getProxyUrl(boolean local)
-```
-
-JS
-
-```
-proxy://do=js
-```
-
-```
-getProxy(boolean local)
-```
-
-### 配置範例
-
-[本地/線上](other/sample/config.json)
-
-### 飛機群
-
-[討論群組](https://t.me/fongmi_official)  
-[發布頻道](https://t.me/fongmi_release)
-
-### 贊助
-
-![photo_2024-01-10_11-39-12](https://github.com/FongMi/TV/assets/3471963/fdc12771-386c-4d5d-9a4d-d0bec0276fa7)
-
-### Star
-
-[![Star History Chart](https://api.star-history.com/svg?repos=FongMi/TV&type=Date)](https://www.star-history.com/#FongMi/TV&Date)
+本软件开发者倡议：请用户务必遵守所在地法律法规，尊重知识产权，仅通过合法授权渠道获取和使用媒体内容。本软件设计初衷是为用户管理其合法拥有或已获授权的媒体文件提供便利。
