@@ -6,6 +6,8 @@
 
 - [FongMi/TV](https://github.com/FongMi/TV)（手机端）
 
+注意：本软件为“影视-K版”，不是OK影视。本软件基于原版FongMi影视开发。
+
 **本软件完全、永远免费、开源，如果您下载或使用了本软件，视为您已阅读并同意本软件的[免责声明](https://github.com/kknifer7/TV-K/raw/refs/heads/main/doc/%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E.txt)**
 
 ## 免责声明
