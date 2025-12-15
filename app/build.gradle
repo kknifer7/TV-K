@@ -12,12 +12,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.fongmi.android.tv"
+        applicationId "io.kknifer7.android.tv"
         minSdk 24
         //noinspection ExpiredTargetSdkVersion
         targetSdk 28
-        versionCode 499
-        versionName "4.9.9"
+        versionCode 1
+        versionName "1.0.0 (Based on FongMi TV 4.9.9)"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString(), "eventBusIndex": "com.fongmi.android.tv.event.EventIndex"]
@@ -122,6 +122,7 @@ dependencies {
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
     implementation('org.simpleframework:simple-xml:2.7.1') { exclude group: 'stax', module: 'stax-api' exclude group: 'xpp3', module: 'xpp3' }
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
+    implementation 'org.java-websocket:Java-WebSocket:1.6.0'
     leanbackImplementation 'androidx.leanback:leanback:1.2.0'
     leanbackImplementation 'com.github.JessYanCoding:AndroidAutoSize:1.2.1'
     mobileImplementation 'androidx.biometric:biometric:1.1.0'

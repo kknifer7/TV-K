@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -47,6 +48,8 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import io.knifer.freebox.websocket.WSHelper;
 
 public class HomeActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener {
 
@@ -115,9 +118,21 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
     }
 
     private void initConfig() {
+        String ANDROID_ID;
+
         VodConfig.get().init().load(getCallback());
         LiveConfig.get().init().load();
         WallConfig.get().init();
+
+        // FreeBox WebSocket初始化
+        ANDROID_ID = Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (WSHelper.init(ANDROID_ID)) {
+            mBinding.getRoot().postDelayed(() -> {
+                if (WSHelper.isOpen()) {
+                    Notify.show(R.string.dialog_pairing_success);
+                }
+            }, 3000);
+        }
     }
 
     private Callback getCallback() {

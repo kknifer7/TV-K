@@ -1,7 +1,7 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
     <!-- App -->
-    <string name="app_name">影視</string>
+    <string name="app_name">影視-K</string>
 
     <!-- Live -->
     <string name="live_pass">密碼</string>
@@ -73,6 +73,8 @@
     <string name="setting_live">直播</string>
     <string name="setting_wall">壁紙</string>
     <string name="setting_player">播放設定</string>
+    <string name="setting_freebox_pairing">FreeBox配對</string>
+    <string name="setting_freebox_paired">FreeBox配對 - 已連接：%s</string>
     <string name="setting_incognito">無痕模式</string>
     <string name="setting_size">圖片尺寸</string>
     <string name="setting_doh">DoH</string>
@@ -122,6 +124,19 @@
     <string name="dialog_config_hint">請輸入配置…</string>
     <string name="dialog_config_name">請輸入名稱…</string>
     <string name="dialog_config_url">請輸入網址…</string>
+    <string name="dialog_local_ip_failed">獲取失敗</string>
+    <string name="dialog_local_ip">本機地址：%s</string>
+    <string name="dialog_ip_address">請輸入IP…</string>
+    <string name="dialog_port">請輸入端口…</string>
+    <string name="dialog_connect_reconnect">連接/重連</string>
+    <string name="dialog_disconnect">斷開</string>
+    <string name="dialog_pairing_desc">請先在電腦端開啟FreeBox，然後輸入服務地址和端口進行連接。</string>
+    <string name="dialog_pairing_success">FreeBox配對成功</string>
+    <string name="dialog_pairing_failed">連接失敗，請檢查地址和端口</string>
+    <string name="dialog_disconnected">FreeBox已斷開連接</string>
+    <string name="dialog_pairing_form_invalid">請輸入IP和端口</string>
+    <string name="dialog_pairing_port_invalid">端口格式錯誤</string>
+    <string name="dialog_pairing">正在配對FreeBox…</string>
 
     <!-- Error -->
     <string name="error_config_get">配置取得失敗</string>
@@ -141,6 +156,7 @@
     <string name="update_version">發現新版本 <xliff:g name="name">%s</xliff:g></string>
     <string name="update_check">正在檢查更新…</string>
     <string name="update_confirm">更新</string>
+    <string name="update_disabled">TV-K不支持自更新，請留意FreeBox的更新日誌。</string>
 
     <!-- Crash -->
     <string name="crash_info">發生意外錯誤\n抱歉給您帶來不便</string>

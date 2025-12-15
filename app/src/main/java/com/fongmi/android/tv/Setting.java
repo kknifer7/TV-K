@@ -274,6 +274,24 @@ public class Setting {
         Prefers.put("subtitle_position", value);
     }
 
+    public static String getFreeBoxServiceAddress() {
+        return Prefers.getString("free_box_service_address");
+    }
+
+    public static void putFreeBoxServiceAddress(String address) {
+        Prefers.put("free_box_service_address", address);
+    }
+
+    public static int getFreeBoxServicePort() {
+        return Prefers.getInt("free_box_service_port", 9898);
+    }
+
+    public static void putFreeBoxServicePort(int port) {
+        if (port > 0 && port < 65536) {
+            Prefers.put("free_box_service_port", port);
+        }
+    }
+
     public static boolean isBackgroundOff() {
         return getBackground() == 0;
     }

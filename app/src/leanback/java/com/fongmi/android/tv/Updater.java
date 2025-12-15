@@ -59,8 +59,9 @@ public class Updater implements Download.Callback {
     }
 
     public void start(Activity activity) {
-        if (!Setting.getUpdate()) return;
-        App.execute(() -> doInBackground(activity));
+        /*if (!Setting.getUpdate()) return;
+        App.execute(() -> doInBackground(activity));*/
+        Notify.show(R.string.update_disabled);
     }
 
     private void doInBackground(Activity activity) {

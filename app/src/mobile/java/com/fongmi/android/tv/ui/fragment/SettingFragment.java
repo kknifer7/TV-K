@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewbinding.ViewBinding;
 
 import com.fongmi.android.tv.BuildConfig;
@@ -53,6 +54,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.knifer.freebox.ui.dialog.PairingDialog;
+import io.knifer.freebox.websocket.WSHelper;
+
 public class SettingFragment extends BaseFragment implements ConfigCallback, SiteCallback, LiveCallback {
 
     private FragmentSettingBinding mBinding;
@@ -93,6 +97,12 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
         mBinding.liveUrl.setText(LiveConfig.getDesc());
         mBinding.wallUrl.setText(WallConfig.getDesc());
         mBinding.versionText.setText(BuildConfig.VERSION_NAME);
+        updateFreeBoxPairingStatusText(requireActivity(), WSHelper.isOpen());
+        WSHelper.setConnectionStatusListener(
+                newValue -> mBinding.getRoot().post(
+                        () -> updateFreeBoxPairingStatusText(requireActivity(), newValue)
+                )
+        );
         setOtherText();
         setCacheText();
     }
@@ -122,6 +132,7 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
         mBinding.cache.setOnClickListener(this::onCache);
         mBinding.backup.setOnClickListener(this::onBackup);
         mBinding.player.setOnClickListener(this::onPlayer);
+        mBinding.freeBoxPairing.setOnClickListener(this::onFreeBoxPairing);
         mBinding.restore.setOnClickListener(this::onRestore);
         mBinding.version.setOnClickListener(this::onVersion);
         mBinding.vod.setOnLongClickListener(this::onVodEdit);
@@ -249,6 +260,25 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
 
     private void onPlayer(View view) {
         getRoot().change(2);
+    }
+
+    private void onFreeBoxPairing(View view) {
+        FragmentActivity activity = requireActivity();
+
+        PairingDialog.create(activity).show();
+    }
+
+    private void updateFreeBoxPairingStatusText(Activity activity, @Nullable Boolean connected) {
+        if (connected == null) {
+            connected = WSHelper.isOpen();
+        }
+        String text = connected ?
+                String.format(activity.getString(
+                        R.string.setting_freebox_paired
+                ), Setting.getFreeBoxServiceAddress()) :
+                activity.getString(R.string.setting_freebox_pairing);
+
+        mBinding.freeBoxPairingText.setText(text);
     }
 
     private void onVersion(View view) {

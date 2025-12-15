@@ -1,6 +1,7 @@
 # TV
 -keep class com.fongmi.quickjs.method.** { *; }
 -keep class com.fongmi.android.tv.bean.** { *; }
+-keep class io.knifer.freebox.model.** { *; }
 
 # Gson
 -keep class com.google.gson.** { *; }

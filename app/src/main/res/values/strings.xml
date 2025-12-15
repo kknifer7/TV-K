@@ -1,7 +1,7 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
     <!-- App -->
-    <string name="app_name">TV</string>
+    <string name="app_name">TV-K</string>
 
     <!-- Live -->
     <string name="live_pass">Pass</string>
@@ -74,6 +74,8 @@
     <string name="setting_live">Live</string>
     <string name="setting_wall">Wallpaper</string>
     <string name="setting_player">Player setting</string>
+    <string name="setting_freebox_pairing">FreeBox Pairing</string>
+    <string name="setting_freebox_paired">FreeBox Pairing - Connected：%s</string>
     <string name="setting_incognito">Incognito mode</string>
     <string name="setting_size">Image size</string>
     <string name="setting_doh">DoH</string>
@@ -123,6 +125,19 @@
     <string name="dialog_config_hint">Please enter the config…</string>
     <string name="dialog_config_name">Please enter the name…</string>
     <string name="dialog_config_url">Please enter the url…</string>
+    <string name="dialog_local_ip_failed">Get IP failed</string>
+    <string name="dialog_local_ip">Local IP：%s</string>
+    <string name="dialog_ip_address">Please enter the IP…</string>
+    <string name="dialog_port">Please enter the port…</string>
+    <string name="dialog_connect_reconnect">Connect/Reconnect</string>
+    <string name="dialog_disconnect">Disconnect</string>
+    <string name="dialog_pairing_desc">Open FreeBox on PC first, then enter the service address and port to connect。</string>
+    <string name="dialog_pairing_success">FreeBox pairing successful.</string>
+    <string name="dialog_pairing_failed">Connection failed, please check address and port.</string>
+    <string name="dialog_disconnected">FreeBox has been disconnected.</string>
+    <string name="dialog_pairing_form_invalid">Please enter IP and port.</string>
+    <string name="dialog_pairing_port_invalid">Port format error.</string>
+    <string name="dialog_pairing">Pairing FreeBox…</string>
 
     <!-- Error -->
     <string name="error_config_get">Configuration get failed</string>
@@ -142,6 +157,7 @@
     <string name="update_version">New version <xliff:g name="name">%s</xliff:g></string>
     <string name="update_check">Checking for updates…</string>
     <string name="update_confirm">Update</string>
+    <string name="update_disabled">TV-K does not self-update, please pay attention to the changelog of FreeBox.</string>
 
     <!-- Crash -->
     <string name="crash_info">An unexpected error occurred.\nSorry for the inconvenience.</string>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20sp"
+    android:backgroundTint="@color/transparent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvAddressForFreeBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25sp"
+        android:text="@string/dialog_pairing_desc"
+        android:textAlignment="center" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/freeBoxServiceAddressInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:imeOptions="actionNext"
+        android:background="@null"
+        android:hint="@string/dialog_ip_address"
+        android:inputType="text"
+        android:maxLength="255"
+        android:singleLine="true"
+        android:textAppearance="@style/ToolbarTextAppearance"
+        android:textCursorDrawable="@drawable/shape_cursor" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/freeBoxServicePortInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25sp"
+        android:imeOptions="actionDone"
+        android:background="@null"
+        android:hint="@string/dialog_port"
+        android:inputType="number"
+        android:maxLength="255"
+        android:singleLine="true"
+        android:textAppearance="@style/ToolbarTextAppearance"
+        android:textCursorDrawable="@drawable/shape_cursor" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/freeBoxServiceConnect"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="3sp"
+            android:text="@string/dialog_connect_reconnect" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/freeBoxServiceDisConnect"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/dialog_disconnect" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
