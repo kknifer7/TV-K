@@ -12,8 +12,11 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.knifer.freebox.constant.MessageCodes;
 import io.knifer.freebox.model.common.Message;
 import io.knifer.freebox.ui.listener.FreeBoxConnectionStatusChangeListener;
 import io.knifer.freebox.util.CastUtil;
@@ -39,6 +42,8 @@ import io.knifer.freebox.websocket.service.WSService;
 public class WSClient extends WebSocketClient {
 
     private FreeBoxConnectionStatusChangeListener connectionStatusChangeListener;
+
+    private ExecutorService searchExecutor;
 
     private final WSService service;
 
@@ -71,13 +76,23 @@ public class WSClient extends WebSocketClient {
         reconnectFlag = new AtomicBoolean(false);
     }
 
+    private void initSearchExecutor() {
+        if (searchExecutor != null && !searchExecutor.isShutdown()) {
+            searchExecutor.shutdownNow();
+        }
+        searchExecutor = Executors.newFixedThreadPool(3);
+    }
+
     @Override
     public void onOpen(ServerHandshake handshakedata) {
+        if (connectionStatusChangeListener != null) {
+            connectionStatusChangeListener.onChange(
+                    true, this.getConnection().getRemoteSocketAddress().getHostString()
+            );
+        }
+        initSearchExecutor();
         service.register();
         reconnectFlag.set(true);
-        if (connectionStatusChangeListener != null) {
-            connectionStatusChangeListener.onChange(true);
-        }
     }
 
     @Override
@@ -85,10 +100,13 @@ public class WSClient extends WebSocketClient {
         WebSocket connection;
         InetSocketAddress inetSocketAddress;
 
-        Logger.t(LOG_TAG).i("closed with exit code " + code + " additional info: " + reason);
+        Logger.t(LOG_TAG).i("closed with exit code {} additional info: {}", code, reason);
         if (connectionStatusChangeListener != null) {
-            connectionStatusChangeListener.onChange(false);
+            connectionStatusChangeListener.onChange(
+                    false, this.getConnection().getRemoteSocketAddress().getHostString()
+            );
         }
+        searchExecutor.shutdownNow();
         if (!reconnectFlag.get()) {
             return;
         }
@@ -108,21 +126,31 @@ public class WSClient extends WebSocketClient {
                 message, new TypeToken<>(){}
         );
 
-        for (WebSocketMessageHandler<?> handler : handlers) {
-            if (handler.support(msgUnResolved)) {
-                handler.handle(CastUtil.cast(handler.resolve(message)));
+        if (msgUnResolved.getCode() == MessageCodes.GET_SEARCH_CONTENT) {
+            searchExecutor.submit(() -> {
+                for (WebSocketMessageHandler<?> handler : handlers) {
+                    if (handler.support(msgUnResolved)) {
+                        handler.handle(CastUtil.cast(handler.resolve(message)));
+                    }
+                }
+            });
+        } else {
+            for (WebSocketMessageHandler<?> handler : handlers) {
+                if (handler.support(msgUnResolved)) {
+                    handler.handle(CastUtil.cast(handler.resolve(message)));
+                }
             }
         }
     }
 
     @Override
     public void onMessage(ByteBuffer message) {
-        System.out.println("received ByteBuffer");
+        Logger.t(LOG_TAG).w("received ByteBuffer, {}", message);
     }
 
     @Override
     public void onError(Exception ex) {
-        System.err.println("an error occurred:" + ex);
+        Logger.t(LOG_TAG).e("an error occurred", ex);
     }
 
     @Override

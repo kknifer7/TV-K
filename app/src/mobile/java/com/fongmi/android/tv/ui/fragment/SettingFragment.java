@@ -97,10 +97,10 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
         mBinding.liveUrl.setText(LiveConfig.getDesc());
         mBinding.wallUrl.setText(WallConfig.getDesc());
         mBinding.versionText.setText(BuildConfig.VERSION_NAME);
-        updateFreeBoxPairingStatusText(requireActivity(), WSHelper.isOpen());
+        updateFreeBoxPairingStatusText(requireActivity(), WSHelper.isOpen(), null);
         WSHelper.setConnectionStatusListener(
-                newValue -> mBinding.getRoot().post(
-                        () -> updateFreeBoxPairingStatusText(requireActivity(), newValue)
+                (newValue, ipAddress) -> mBinding.getRoot().post(
+                        () -> updateFreeBoxPairingStatusText(requireActivity(), newValue, ipAddress)
                 )
         );
         setOtherText();
@@ -268,14 +268,19 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
         PairingDialog.create(activity).show();
     }
 
-    private void updateFreeBoxPairingStatusText(Activity activity, @Nullable Boolean connected) {
+    private void updateFreeBoxPairingStatusText(
+            Activity activity, @Nullable Boolean connected, @Nullable String ipAddress
+    ) {
         if (connected == null) {
             connected = WSHelper.isOpen();
+        }
+        if (ipAddress == null) {
+            ipAddress = Setting.getFreeBoxServiceAddress();
         }
         String text = connected ?
                 String.format(activity.getString(
                         R.string.setting_freebox_paired
-                ), Setting.getFreeBoxServiceAddress()) :
+                ), ipAddress):
                 activity.getString(R.string.setting_freebox_pairing);
 
         mBinding.freeBoxPairingText.setText(text);
