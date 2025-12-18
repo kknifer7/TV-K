@@ -17,13 +17,16 @@ public class RegisterInfo {
 
     private int kType;
 
+    private int protocolVersionCode;
+
     public RegisterInfo() {
     }
 
-    public RegisterInfo(String clientId, String clientName, int kType) {
+    public RegisterInfo(String clientId, String clientName, int kType, int protocolVersionCode) {
         this.clientId = clientId;
         this.clientName = clientName;
         this.kType = kType;
+        this.protocolVersionCode = protocolVersionCode;
     }
 
     public String getClientId() {
@@ -50,16 +53,24 @@ public class RegisterInfo {
         this.kType = kType;
     }
 
+    public int getProtocolVersionCode() {
+        return protocolVersionCode;
+    }
+
+    public void setProtocolVersionCode(int protocolVersionCode) {
+        this.protocolVersionCode = protocolVersionCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RegisterInfo that = (RegisterInfo) o;
-        return kType == that.kType && Objects.equals(clientId, that.clientId) && Objects.equals(clientName, that.clientName);
+        return kType == that.kType && protocolVersionCode == that.protocolVersionCode && Objects.equals(clientId, that.clientId) && Objects.equals(clientName, that.clientName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, clientName, kType);
+        return Objects.hash(clientId, clientName, kType, protocolVersionCode);
     }
 
     @NonNull
@@ -69,10 +80,13 @@ public class RegisterInfo {
                 "clientId='" + clientId + '\'' +
                 ", clientName='" + clientName + '\'' +
                 ", kType=" + kType +
+                ", protocolVersionCode=" + protocolVersionCode +
                 '}';
     }
 
-    public static RegisterInfo of(String clientId, String clientName, int kType) {
-        return new RegisterInfo(clientId, clientName, kType);
+    public static RegisterInfo of(
+            String clientId, String clientName, int kType, int protocolVersionCode
+    ) {
+        return new RegisterInfo(clientId, clientName, kType, protocolVersionCode);
     }
 }

@@ -58,6 +58,8 @@ public class WSService {
 
     private final String clientId;
 
+    private final static int PROTOCOL_VERSION_CODE = 1;
+
     public WSService(WebSocket connection, String clientId) {
         this.connection = connection;
         this.clientId = clientId;
@@ -66,7 +68,7 @@ public class WSService {
     public void register() {
         send(Message.oneWay(
                 MessageCodes.REGISTER,
-                RegisterInfo.of(clientId, "tv-k-default", 0)
+                RegisterInfo.of(clientId, "tv-k-default", 0, PROTOCOL_VERSION_CODE)
         ));
     }
 
