@@ -36,6 +36,11 @@ public class SavePlayHistoryDTO {
     private String vodFlag;
 
     /**
+     * 播放的源名称
+     */
+    private String playFlag;
+
+    /**
      * 播放的ep索引
      */
     private int episodeIndex;
@@ -63,12 +68,13 @@ public class SavePlayHistoryDTO {
     public SavePlayHistoryDTO() {
     }
 
-    public SavePlayHistoryDTO(String sourceKey, String vodId, String vodName, String vodPic, String vodFlag, int episodeIndex, String episodeUrl, boolean revSort, long position, long duration) {
+    public SavePlayHistoryDTO(String sourceKey, String vodId, String vodName, String vodPic, String vodFlag, String playFlag, int episodeIndex, String episodeUrl, boolean revSort, long position, long duration) {
         this.sourceKey = sourceKey;
         this.vodId = vodId;
         this.vodName = vodName;
         this.vodPic = vodPic;
         this.vodFlag = vodFlag;
+        this.playFlag = playFlag;
         this.episodeIndex = episodeIndex;
         this.episodeUrl = episodeUrl;
         this.revSort = revSort;
@@ -116,6 +122,14 @@ public class SavePlayHistoryDTO {
         this.vodFlag = vodFlag;
     }
 
+    public String getPlayFlag() {
+        return playFlag;
+    }
+
+    public void setPlayFlag(String playFlag) {
+        this.playFlag = playFlag;
+    }
+
     public int getEpisodeIndex() {
         return episodeIndex;
     }
@@ -160,12 +174,12 @@ public class SavePlayHistoryDTO {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SavePlayHistoryDTO that = (SavePlayHistoryDTO) o;
-        return episodeIndex == that.episodeIndex && revSort == that.revSort && position == that.position && duration == that.duration && Objects.equals(sourceKey, that.sourceKey) && Objects.equals(vodId, that.vodId) && Objects.equals(vodName, that.vodName) && Objects.equals(vodPic, that.vodPic) && Objects.equals(vodFlag, that.vodFlag) && Objects.equals(episodeUrl, that.episodeUrl);
+        return episodeIndex == that.episodeIndex && revSort == that.revSort && position == that.position && duration == that.duration && Objects.equals(sourceKey, that.sourceKey) && Objects.equals(vodId, that.vodId) && Objects.equals(vodName, that.vodName) && Objects.equals(vodPic, that.vodPic) && Objects.equals(vodFlag, that.vodFlag) && Objects.equals(playFlag, that.playFlag) && Objects.equals(episodeUrl, that.episodeUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceKey, vodId, vodName, vodPic, vodFlag, episodeIndex, episodeUrl, revSort, position);
+        return Objects.hash(sourceKey, vodId, vodName, vodPic, vodFlag, playFlag, episodeIndex, episodeUrl, revSort, position, duration);
     }
 
     @NonNull
@@ -177,6 +191,7 @@ public class SavePlayHistoryDTO {
                 ", vodName='" + vodName + '\'' +
                 ", vodPic='" + vodPic + '\'' +
                 ", vodFlag='" + vodFlag + '\'' +
+                ", playFlag='" + playFlag + '\'' +
                 ", episodeIndex=" + episodeIndex +
                 ", episodeUrl='" + episodeUrl + '\'' +
                 ", revSort=" + revSort +
