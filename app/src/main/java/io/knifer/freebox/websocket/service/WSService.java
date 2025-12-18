@@ -499,12 +499,14 @@ public class WSService {
         History history = new History();
         String siteKey = dto.getSourceKey();
         String vodId = dto.getVodId();
-        String vodFlag = dto.getVodFlag();
+        String episodeFlag = dto.getEpisodeFlag();
+        String playFlag = dto.getPlayFlag();
 
         if (
                 TextUtils.isEmpty(siteKey) ||
                 TextUtils.isEmpty(vodId) ||
-                TextUtils.isEmpty(vodFlag)
+                TextUtils.isEmpty(episodeFlag) ||
+                TextUtils.isEmpty(playFlag)
         ) {
 
             return null;
@@ -513,8 +515,8 @@ public class WSService {
         history.setCid(VodConfig.getCid());
         history.setVodName(dto.getVodName());
         history.setVodPic(dto.getVodPic());
-        history.setVodFlag(vodFlag);
-        history.setVodRemarks(vodFlag);
+        history.setVodFlag(playFlag);
+        history.setVodRemarks(episodeFlag);
         history.setEpisodeUrl(dto.getEpisodeUrl());
         history.setPosition(dto.getPosition());
         history.setDuration(dto.getDuration());
