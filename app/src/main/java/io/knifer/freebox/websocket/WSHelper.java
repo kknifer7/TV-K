@@ -1,30 +1,44 @@
 package io.knifer.freebox.websocket;
 
+import android.content.Context;
+
 import com.fongmi.android.tv.Setting;
 import com.orhanobut.logger.Logger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import io.knifer.freebox.service.WebSocketService;
 import io.knifer.freebox.ui.listener.FreeBoxConnectionStatusChangeListener;
 
-/**
- * FreeBox WebSocket Helper
- * @author Knifer
- */
 public final class WSHelper {
 
-    private static WSClient client;
-
-    private static volatile boolean initFlag = false;
-
-    private static volatile String clientId;
-
-    private static FreeBoxConnectionStatusChangeListener connectionStatusChangeListener;
+    private WSClient client;
+    private boolean initFlag = false;
+    private String clientId;
+    private FreeBoxConnectionStatusChangeListener connectionStatusChangeListener;
+    private final Context appContext;
+    private boolean serviceStarted = false;
 
     private static final String LOG_TAG = WSHelper.class.getSimpleName();
+    private static volatile WSHelper instance;
 
-    public static boolean init(String clientId) {
+    private WSHelper(Context context) {
+        this.appContext = context.getApplicationContext();
+    }
+
+    public static WSHelper getInstance(Context context) {
+        if (instance == null) {
+            synchronized (WSHelper.class) {
+                if (instance == null) {
+                    instance = new WSHelper(context);
+                }
+            }
+        }
+        return instance;
+    }
+
+    public boolean init(String clientId) {
         if (initFlag) {
             return false;
         }
@@ -32,10 +46,9 @@ public final class WSHelper {
         String address = Setting.getFreeBoxServiceAddress();
         int port = Setting.getFreeBoxServicePort();
 
-        WSHelper.clientId = clientId;
+        this.clientId = clientId;
         initFlag = true;
         if (address != null) {
-            // 目前只支持ws协议
             connect(address, port, false);
         }
         Logger.t(LOG_TAG).i("WSHelper init successfully");
@@ -43,85 +56,102 @@ public final class WSHelper {
         return true;
     }
 
-    private static void createClient(String address, int port, boolean safeFlag) {
+    private void createClient(String address, int port, boolean safeFlag) {
         try {
             client = new WSClient(
+                    appContext,
                     new URI(safeFlag ? "wss" : "ws" + "://" + address + ":" + port),
-                    clientId
+                    clientId,
+                    new WSClient.ConnectionListener() {
+                        @Override
+                        public void onConnected() {
+                            if (!serviceStarted) {
+                                WebSocketService.startService(appContext);
+                                serviceStarted = true;
+                                Logger.t(LOG_TAG).d("Connected, service started");
+                            }
+                        }
+
+                        @Override
+                        public void onDisconnected() {
+                            if (serviceStarted) {
+                                WebSocketService.stopService(appContext);
+                                serviceStarted = false;
+                                Logger.t(LOG_TAG).d("Disconnected, service stopped");
+                            }
+                        }
+                    }
             );
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            Logger.t(LOG_TAG).i("createClient failed, address illegal", e);
         }
         if (connectionStatusChangeListener != null) {
             client.setConnectionStatusListener(connectionStatusChangeListener);
         }
     }
 
-    public static void connect(String address, int port, boolean safeFlag) {
+    public void connect(String address, int port, boolean safeFlag) {
         if (!initFlag) {
             throw new IllegalStateException("WSHelper not init");
         }
         if (isOpen()) {
             throw new IllegalStateException("WebSocket Service already connected");
         }
+
         createClient(address, port, safeFlag);
         client.connect();
     }
 
-    public static boolean connectBlocking(String address, int port, boolean safeFlag) {
+    public boolean connectBlocking(String address, int port, boolean safeFlag) {
         if (!initFlag) {
             Logger.t(LOG_TAG).e("WSHelper not init");
-
             return false;
         }
         if (isOpen()) {
             Logger.t(LOG_TAG).e("WebSocket Service already connected");
-
             return false;
         }
+
         createClient(address, port, safeFlag);
         try {
-            client.connectBlocking();
+            return client.connectBlocking();
         } catch (Exception e) {
             Logger.t(LOG_TAG).e("unknown exception: " + e.getMessage());
-
             return false;
         }
-
-        return true;
     }
 
-    public static boolean isOpen() {
+    public boolean isOpen() {
         return client != null && client.isOpen();
     }
 
-    public static boolean isClosed() {
-        return client != null && client.isClosed();
-    }
-
-    public static boolean isClosing() {
-        return client != null && client.isClosing();
-    }
-
-    public static void close() {
+    public void close() {
         if (canClose()) {
             client.close();
         }
+        if (serviceStarted) {
+            WebSocketService.stopService(appContext);
+            serviceStarted = false;
+        }
     }
 
-    public static void closeBlocking() {
+    public void closeBlocking() {
         if (canClose()) {
             try {
                 client.closeBlocking();
             } catch (InterruptedException ignored) {}
         }
+        if (serviceStarted) {
+            WebSocketService.stopService(appContext);
+            serviceStarted = false;
+        }
     }
 
-    private static boolean canClose() {
+    private boolean canClose() {
         return client != null && !client.isClosed() && !client.isClosing();
     }
 
-    public static void setConnectionStatusListener(FreeBoxConnectionStatusChangeListener listener) {
+    public void setConnectionStatusListener(FreeBoxConnectionStatusChangeListener listener) {
         connectionStatusChangeListener = listener;
         if (client != null) {
             client.setConnectionStatusListener(listener);

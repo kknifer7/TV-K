@@ -175,6 +175,9 @@
     <string name="times">times</string>
     <string name="lines">lines</string>
 
+    <!-- Channel -->
+    <string name="freebox_kebsocket_service">FreeBox Connection</string>
+
     <string-array name="select_decode">
         <item>Soft</item>
         <item>Hard</item>

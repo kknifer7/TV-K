@@ -103,5 +103,11 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name="io.knifer.freebox.service.WebSocketService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
     </application>
 </manifest>

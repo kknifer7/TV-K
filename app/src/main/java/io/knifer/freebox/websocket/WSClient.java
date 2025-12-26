@@ -1,5 +1,7 @@
 package io.knifer.freebox.websocket;
 
+import android.content.Context;
+
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
@@ -41,20 +43,50 @@ import io.knifer.freebox.websocket.service.WSService;
 
 public class WSClient extends WebSocketClient {
 
+    public interface ConnectionListener {
+        void onConnected();
+        void onDisconnected();
+    }
+
     private FreeBoxConnectionStatusChangeListener connectionStatusChangeListener;
-
     private ExecutorService searchExecutor;
-
     private final WSService service;
-
     private final List<WebSocketMessageHandler<?>> handlers;
-
     private final AtomicBoolean reconnectFlag;
+    private final Context appContext;
+    private final ConnectionListener connectionListener;
 
     private static final String LOG_TAG = WSClient.class.getSimpleName();
 
-    public WSClient(URI serverURI, String clientId) {
+    public WSClient(Context context, URI serverURI, String clientId) {
         super(serverURI);
+        this.appContext = context.getApplicationContext();
+        this.connectionListener = null;
+        service = new WSService(this.getConnection(), clientId);
+        handlers = ImmutableList.of(
+                new GetSourceBeanListHandler(service),
+                new GetHomeContentHandler(service),
+                new GetCategoryContentHandler(service),
+                new GetDetailContentHandler(service),
+                new GetPlayerContentHandler(service),
+                new GetPlayHistoryHandler(service),
+                new GetSearchContentHandler(service),
+                new SavePlayHistoryHandler(service),
+                new DeletePlayHistoryHandler(service),
+                new GetMovieCollectionHandler(service),
+                new SaveMovieCollectionHandler(service),
+                new DeleteMovieCollectionHandler(service),
+                new GetOnePlayHistoryHandler(service),
+                new GetMovieCollectedStatusHandler(service),
+                new GetLivesHandler(service)
+        );
+        reconnectFlag = new AtomicBoolean(false);
+    }
+
+    public WSClient(Context context, URI serverURI, String clientId, ConnectionListener connectionListener) {
+        super(serverURI);
+        this.appContext = context.getApplicationContext();
+        this.connectionListener = connectionListener;
         service = new WSService(this.getConnection(), clientId);
         handlers = ImmutableList.of(
                 new GetSourceBeanListHandler(service),
@@ -85,6 +117,9 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
+        if (connectionListener != null) {
+            connectionListener.onConnected();
+        }
         if (connectionStatusChangeListener != null) {
             connectionStatusChangeListener.onChange(
                     true, this.getConnection().getRemoteSocketAddress().getHostString()
@@ -97,23 +132,27 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        WebSocket connection;
-        InetSocketAddress inetSocketAddress;
-
         Logger.t(LOG_TAG).i("closed with exit code {} additional info: {}", code, reason);
+
+        if (connectionListener != null) {
+            connectionListener.onDisconnected();
+        }
+
         if (connectionStatusChangeListener != null) {
             connectionStatusChangeListener.onChange(
                     false, this.getConnection().getRemoteSocketAddress().getHostString()
             );
         }
         searchExecutor.shutdownNow();
+
         if (!reconnectFlag.get()) {
             return;
         }
-        // 异常断线后自动重连
-        connection = this.getConnection();
-        inetSocketAddress = connection.getLocalSocketAddress();
-        WSHelper.connectBlocking(
+
+        WebSocket connection = this.getConnection();
+        InetSocketAddress inetSocketAddress = connection.getLocalSocketAddress();
+
+        WSHelper.getInstance(appContext).connectBlocking(
                 inetSocketAddress.getAddress().getHostAddress(),
                 inetSocketAddress.getPort(),
                 connection.hasSSLSupport()

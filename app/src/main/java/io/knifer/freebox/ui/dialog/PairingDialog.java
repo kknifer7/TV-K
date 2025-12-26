@@ -24,6 +24,7 @@ public class PairingDialog {
 
     private DialogFreeBoxPairingBinding binding;
     private AlertDialog dialog;
+    private WSHelper wsHelper;
 
     /**
      * 静态工厂方法，从 Activity 创建
@@ -48,6 +49,7 @@ public class PairingDialog {
                 .setView(binding.getRoot())
                 .setCancelable(true)
                 .create();
+        wsHelper = WSHelper.getInstance(activity.getApplicationContext());
         initView(activity);
         initEvent();
     }
@@ -177,8 +179,8 @@ public class PairingDialog {
         // 在新线程中执行网络连接
         new Thread(() -> {
             boolean success;
-            WSHelper.close(); // 关闭现有连接
-            success = WSHelper.connectBlocking(address, port, false); // 尝试连接
+            wsHelper.close(); // 关闭现有连接
+            success = wsHelper.connectBlocking(address, port, false); // 尝试连接
             Window window = dialog.getWindow();
 
             // 回到主线程更新UI
@@ -205,13 +207,13 @@ public class PairingDialog {
      * 断开连接按钮点击处理
      */
     private void onDisconnect(View view) {
-        if (!WSHelper.isOpen()) {
+        if (!wsHelper.isOpen()) {
             return;
         }
 
         setButtonsEnabled(false);
         new Thread(() -> {
-            WSHelper.closeBlocking(); // 阻塞式关闭连接
+            wsHelper.closeBlocking(); // 阻塞式关闭连接
 
             // 回到主线程更新UI
             if (dialog.getWindow() != null) {
@@ -229,7 +231,7 @@ public class PairingDialog {
      * 根据连接状态更新按钮文本和可用性
      */
     private void updateButtonState() {
-        binding.freeBoxServiceDisConnect.setEnabled(WSHelper.isOpen());
+        binding.freeBoxServiceDisConnect.setEnabled(wsHelper.isOpen());
     }
 
     /**

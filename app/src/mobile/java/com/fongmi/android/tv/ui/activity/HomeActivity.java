@@ -119,6 +119,7 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
 
     private void initConfig() {
         String ANDROID_ID;
+        WSHelper wsHelper;
 
         VodConfig.get().init().load(getCallback());
         LiveConfig.get().init().load();
@@ -126,9 +127,10 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
 
         // FreeBox WebSocket初始化
         ANDROID_ID = Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        if (WSHelper.init(ANDROID_ID)) {
+        wsHelper = WSHelper.getInstance(getApplicationContext());
+        if (wsHelper.init(ANDROID_ID)) {
             mBinding.getRoot().postDelayed(() -> {
-                if (WSHelper.isOpen()) {
+                if (wsHelper.isOpen()) {
                     Notify.show(R.string.dialog_pairing_success);
                 }
             }, 3000);

@@ -62,6 +62,7 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
     private FragmentSettingBinding mBinding;
     private String[] size;
     private int type;
+    private WSHelper wsHelper;
 
     public static SettingFragment newInstance() {
         return new SettingFragment();
@@ -97,8 +98,9 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
         mBinding.liveUrl.setText(LiveConfig.getDesc());
         mBinding.wallUrl.setText(WallConfig.getDesc());
         mBinding.versionText.setText(BuildConfig.VERSION_NAME);
-        updateFreeBoxPairingStatusText(requireActivity(), WSHelper.isOpen(), null);
-        WSHelper.setConnectionStatusListener(
+        wsHelper = WSHelper.getInstance(getContext());
+        updateFreeBoxPairingStatusText(requireActivity(), wsHelper.isOpen(), null);
+        wsHelper.setConnectionStatusListener(
                 (newValue, ipAddress) -> mBinding.getRoot().post(
                         () -> updateFreeBoxPairingStatusText(requireActivity(), newValue, ipAddress)
                 )
@@ -272,7 +274,7 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
             Activity activity, @Nullable Boolean connected, @Nullable String ipAddress
     ) {
         if (connected == null) {
-            connected = WSHelper.isOpen();
+            connected = wsHelper.isOpen();
         }
         if (ipAddress == null) {
             ipAddress = Setting.getFreeBoxServiceAddress();
