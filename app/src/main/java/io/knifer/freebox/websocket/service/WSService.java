@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import io.knifer.freebox.constant.MessageCodes;
@@ -60,11 +62,14 @@ public class WSService {
 
     private final String clientId;
 
+    private final List<Future<?>> searchFutures;
+
     private final static int PROTOCOL_VERSION_CODE = 1;
 
     public WSService(WebSocket connection, String clientId) {
         this.connection = connection;
         this.clientId = clientId;
+        this.searchFutures = new CopyOnWriteArrayList<>();
     }
 
     public void register() {
@@ -350,34 +355,36 @@ public class WSService {
     }
 
     public void searchContent(String topicId, GetSearchContentDTO dto) {
-        Result result;
-
-        try {
-            result = getSearchContent(dto);
-        } catch (Exception ignored) {
-            result = Result.empty();
-        }
-        send(Message.oneWay(
-                MessageCodes.GET_SEARCH_CONTENT_RESULT,
-                result,
-                topicId
-        ));
-    }
-
-    private Result getSearchContent(GetSearchContentDTO dto) {
         String sourceKey = dto.getSourceKey();
         String keyword = dto.getKeyword();
-        Result result;
+        Site site = VodConfig.get().getSite(sourceKey);
+        Future<?> future = App.submitSearch(() -> {
+            Result result;
 
-        try {
-            result = SearchTask.create(
-                    null, VodConfig.get().getSite(sourceKey), keyword, false
-            ).call();
-        } catch (Exception ignored) {
-            result = Result.empty();
-        }
+            try {
+                result = SearchTask.create(null, site, keyword, false).call();
+            } catch (InterruptedException e) {
+                return;
+            } catch (Exception ignored) {
+                result = Result.empty();
+            }
+            send(Message.oneWay(
+                    MessageCodes.GET_SEARCH_CONTENT_RESULT,
+                    result,
+                    topicId
+            ));
+        });
+        searchFutures.add(future);
+    }
 
-        return result;
+    public void cancelAllSearching(String topicId) {
+        searchFutures.forEach(future -> future.cancel(true));
+        searchFutures.clear();
+        send(Message.oneWay(
+                MessageCodes.CANCEL_ALL_SEARCHING_RESULT,
+                null,
+                topicId
+        ));
     }
 
     public void deletePlayHistory(String topicId, DeletePlayHistoryDTO dto) {

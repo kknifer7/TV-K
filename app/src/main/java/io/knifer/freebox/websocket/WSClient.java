@@ -14,16 +14,14 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.knifer.freebox.constant.MessageCodes;
 import io.knifer.freebox.model.common.Message;
 import io.knifer.freebox.ui.listener.FreeBoxConnectionStatusChangeListener;
 import io.knifer.freebox.util.CastUtil;
 import io.knifer.freebox.util.GsonUtil;
 import io.knifer.freebox.websocket.handler.WebSocketMessageHandler;
+import io.knifer.freebox.websocket.handler.impl.CancelAllSearchingHandler;
 import io.knifer.freebox.websocket.handler.impl.DeleteMovieCollectionHandler;
 import io.knifer.freebox.websocket.handler.impl.DeletePlayHistoryHandler;
 import io.knifer.freebox.websocket.handler.impl.GetCategoryContentHandler;
@@ -49,7 +47,6 @@ public class WSClient extends WebSocketClient {
     }
 
     private FreeBoxConnectionStatusChangeListener connectionStatusChangeListener;
-    private ExecutorService searchExecutor;
     private final WSService service;
     private final List<WebSocketMessageHandler<?>> handlers;
     private final AtomicBoolean reconnectFlag;
@@ -58,37 +55,17 @@ public class WSClient extends WebSocketClient {
 
     private static final String LOG_TAG = WSClient.class.getSimpleName();
 
-    public WSClient(Context context, URI serverURI, String clientId) {
-        super(serverURI);
-        this.appContext = context.getApplicationContext();
-        this.connectionListener = null;
-        service = new WSService(this.getConnection(), clientId);
-        handlers = ImmutableList.of(
-                new GetSourceBeanListHandler(service),
-                new GetHomeContentHandler(service),
-                new GetCategoryContentHandler(service),
-                new GetDetailContentHandler(service),
-                new GetPlayerContentHandler(service),
-                new GetPlayHistoryHandler(service),
-                new GetSearchContentHandler(service),
-                new SavePlayHistoryHandler(service),
-                new DeletePlayHistoryHandler(service),
-                new GetMovieCollectionHandler(service),
-                new SaveMovieCollectionHandler(service),
-                new DeleteMovieCollectionHandler(service),
-                new GetOnePlayHistoryHandler(service),
-                new GetMovieCollectedStatusHandler(service),
-                new GetLivesHandler(service)
-        );
-        reconnectFlag = new AtomicBoolean(false);
-    }
-
     public WSClient(Context context, URI serverURI, String clientId, ConnectionListener connectionListener) {
         super(serverURI);
         this.appContext = context.getApplicationContext();
         this.connectionListener = connectionListener;
-        service = new WSService(this.getConnection(), clientId);
-        handlers = ImmutableList.of(
+        this.service = new WSService(this.getConnection(), clientId);
+        this.handlers = createMessageHandlers();
+        this.reconnectFlag = new AtomicBoolean(false);
+    }
+
+    private List<WebSocketMessageHandler<?>> createMessageHandlers() {
+        return ImmutableList.of(
                 new GetSourceBeanListHandler(service),
                 new GetHomeContentHandler(service),
                 new GetCategoryContentHandler(service),
@@ -103,16 +80,9 @@ public class WSClient extends WebSocketClient {
                 new DeleteMovieCollectionHandler(service),
                 new GetOnePlayHistoryHandler(service),
                 new GetMovieCollectedStatusHandler(service),
-                new GetLivesHandler(service)
+                new GetLivesHandler(service),
+                new CancelAllSearchingHandler(service)
         );
-        reconnectFlag = new AtomicBoolean(false);
-    }
-
-    private void initSearchExecutor() {
-        if (searchExecutor != null && !searchExecutor.isShutdown()) {
-            searchExecutor.shutdownNow();
-        }
-        searchExecutor = Executors.newFixedThreadPool(3);
     }
 
     @Override
@@ -125,7 +95,6 @@ public class WSClient extends WebSocketClient {
                     true, this.getConnection().getRemoteSocketAddress().getHostString()
             );
         }
-        initSearchExecutor();
         service.register();
         reconnectFlag.set(true);
     }
@@ -143,7 +112,6 @@ public class WSClient extends WebSocketClient {
                     false, this.getConnection().getRemoteSocketAddress().getHostString()
             );
         }
-        searchExecutor.shutdownNow();
 
         if (!reconnectFlag.get()) {
             return;
@@ -165,19 +133,9 @@ public class WSClient extends WebSocketClient {
                 message, new TypeToken<>(){}
         );
 
-        if (msgUnResolved.getCode() == MessageCodes.GET_SEARCH_CONTENT) {
-            searchExecutor.submit(() -> {
-                for (WebSocketMessageHandler<?> handler : handlers) {
-                    if (handler.support(msgUnResolved)) {
-                        handler.handle(CastUtil.cast(handler.resolve(message)));
-                    }
-                }
-            });
-        } else {
-            for (WebSocketMessageHandler<?> handler : handlers) {
-                if (handler.support(msgUnResolved)) {
-                    handler.handle(CastUtil.cast(handler.resolve(message)));
-                }
+        for (WebSocketMessageHandler<?> handler : handlers) {
+            if (handler.support(msgUnResolved)) {
+                handler.handle(CastUtil.cast(handler.resolve(message)));
             }
         }
     }
