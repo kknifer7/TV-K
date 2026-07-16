@@ -64,7 +64,7 @@ public class WSService {
 
     private final List<Future<?>> searchFutures;
 
-    private final static int PROTOCOL_VERSION_CODE = 1;
+    private final static int PROTOCOL_VERSION_CODE = 2;
 
     public WSService(WebSocket connection, String clientId) {
         this.connection = connection;
